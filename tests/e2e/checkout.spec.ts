@@ -30,7 +30,6 @@ test('complete checkout flow', async ({ page }) => {
   // Verification: cart badge increments
   const badge = await header.cartBadge();
   expect(badge).toBe('1');
-  await loginPage.waitForTimeout(2000);
 
   // User actions: proceed to checkout
   await cartPage.goToCart();

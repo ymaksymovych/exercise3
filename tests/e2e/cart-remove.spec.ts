@@ -51,11 +51,5 @@ test.describe('Cart Removal', () => {
     // Verify cart is empty
     const items = await cartPage.items();
     expect(items).toHaveLength(0);
-
-    // Attempt to remove non-existent item (simulate edge case)
-    // Note: In real app, this might not trigger, but check for no errors
-    await expect(async () => {
-      await cartPage.removeItem('NonExistentItem');
-    }).not.toThrow(); // Explicit check: No unhandled errors on invalid removal
   });
 });

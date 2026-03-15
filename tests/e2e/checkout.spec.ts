@@ -15,7 +15,6 @@ test('complete checkout flow', async ({ page }) => {
 
   // Initialization: login and open inventory page
   await loginPage.goto();
-  await loginPage.waitForTimeout(2000);
   await loginPage.login('standard_user', 'secret_sauce');
   await loginPage.expectLoginSuccess();
 

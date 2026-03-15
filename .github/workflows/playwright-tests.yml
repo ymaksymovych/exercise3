@@ -54,3 +54,9 @@ jobs:
         with:
           name: playwright-traces
           path: test-results/**/trace*.zip
+
+      # Send Teams notification on failure
+      - name: Notify Teams on failure
+        if: failure()
+        run: |
+          curl -H 'Content-Type: application/json' -d "{\"text\":\"Playwright tests failed!\n\nPull request title: ${{ github.event.pull_request.title }}\nPR author: ${{ github.event.pull_request.user.login }}\nBranch name: ${{ github.head_ref }}\nWorkflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" ${{ secrets.TEAMS_WEBHOOK_URL }}

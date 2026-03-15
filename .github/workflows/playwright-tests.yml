@@ -60,3 +60,25 @@ jobs:
         if: failure()
         run: |
           curl -H 'Content-Type: application/json' -d "{\"text\":\"Playwright tests failed!\n\nPull request title: ${{ github.event.pull_request.title }}\nPR author: ${{ github.event.pull_request.user.login }}\nBranch name: ${{ github.head_ref }}\nWorkflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Node.js with Yarn caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      # Run dependency vulnerability scan
+      - name: Run security scan
+        run: |
+          echo "## Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          yarn audit --level high --level critical >> $GITHUB_STEP_SUMMARY

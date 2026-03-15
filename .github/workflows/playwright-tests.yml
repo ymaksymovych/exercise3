@@ -83,13 +83,20 @@ jobs:
           RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           jq --arg timestamp "$TIMESTAMP" --arg runUrl "$RUN_URL" --arg commitSha "$GITHUB_SHA" --arg ref "$GITHUB_REF" --arg conclusion "${{ job.status }}" --argjson passed "$PASSED" --argjson failed "$FAILED" --argjson skipped "$SKIPPED" '. + [{"timestamp": $timestamp, "runUrl": $runUrl, "commitSha": $commitSha, "ref": $ref, "conclusion": $conclusion, "passed": $passed, "failed": $failed, "skipped": $skipped}]' playwright-report/history.json > temp.json && mv temp.json playwright-report/history.json
 
+      # Prepare Pages content (dereference symlinks)
+      - name: Prepare Pages content
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p pages-content
+          cp -rL playwright-report/* pages-content/
+
       # Upload Pages artifact
       - name: Upload Pages artifact
         if: always() && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: playwright-report/
+          path: pages-content/
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages

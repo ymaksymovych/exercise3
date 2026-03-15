@@ -93,7 +93,6 @@ jobs:
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         if: always() && github.ref == 'refs/heads/main'
-        environment: github-pages
         uses: actions/deploy-pages@v4
 
   security-scan:
